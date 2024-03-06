@@ -1,5 +1,4 @@
 
-
 function SomePage() {
     return (
         <div className="p-4">

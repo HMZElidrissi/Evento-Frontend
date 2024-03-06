@@ -1,26 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SomePage from "./components/SomePage";
 import AnotherPage from "./components/AnotherPage";
+import LoginPage from "./components/auth/LoginPage";
 import "./App.css";
 
-function App() {
-    return (
-        <Router>
-            <div className="App">
-                <header className="App-header">
-                    {/* Navigation bar, etc. */}
-                </header>
-                <main>
-                    <Routes>
-                        <Route path="/" element={<SomePage />} />
-                        <Route path="/another" element={<AnotherPage />} />
-                        {/* Define more routes as needed */}
-                    </Routes>
-                </main>
-                <footer>{/* Footer content */}</footer>
-            </div>
-        </Router>
-    );
-}
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SomePage />} />
+        <Route path="/another" element={<AnotherPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        {/* Define more routes as needed */}
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
