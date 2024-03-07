@@ -186,7 +186,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function HomePage() {
+const HomePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -853,3 +853,4 @@ export default function HomePage() {
   );
 }
 
+export default HomePage;
