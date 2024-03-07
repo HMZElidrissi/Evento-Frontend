@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -11,6 +11,7 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const navigation = [
   {
@@ -41,7 +42,6 @@ const navigation = [
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
 ];
 
 function classNames(...classes) {
@@ -50,6 +50,17 @@ function classNames(...classes) {
 
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, token, setUser, setToken } = useStateContext();
+  
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  const handleLogout = (event) => {
+    event.preventDefault();
+    setUser({});
+    setToken(null);
+  }
 
   return (
     <>
@@ -221,6 +232,8 @@ const DashboardPage = () => {
                 </form>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
+                <div className="ml-3 relative text-gray-500">{user.name}&nbsp; &nbsp;</div>
+
                 <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-evento-100"
@@ -266,6 +279,21 @@ const DashboardPage = () => {
                           )}
                         </Menu.Item>
                       ))}
+                      <form method="POST" onSubmit={handleLogout}>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              type="submit"
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block w-full text-left px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Sign out
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </form>
                     </Menu.Items>
                   </Transition>
                 </Menu>
