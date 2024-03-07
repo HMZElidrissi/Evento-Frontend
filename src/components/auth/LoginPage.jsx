@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Label from "./common/Label";
 import Input from "./common/Input";
 import PrimaryButton from "./common/PrimaryButton";
@@ -6,12 +7,33 @@ import PrimaryButton from "./common/PrimaryButton";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleLogin =  (event) => {
     event.preventDefault();
-    // Process login here
-    console.log(email, password);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem("token", data.token);
+          navigate("/dashboard");
+        } else {
+          setError(data.error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setPassword("");
   };
+
   return (
     <>
       <div className="h-screen">
@@ -28,8 +50,10 @@ const LoginPage = () => {
 
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-              <form className="space-y-6" onSubmit={handleSubmit} method="POST">
-                
+              <form className="space-y-6" onSubmit={handleLogin} method="POST">
+                {error && (
+                  <div className="text-center text-red-500 text-sm mb-2">{error}</div>
+                )}
                 <div>
                   <Label htmlFor="email">Email address</Label>
                   <Input
@@ -90,6 +114,6 @@ const LoginPage = () => {
       </div>
     </>
   );
-}
+};
 
 export default LoginPage;

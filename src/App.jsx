@@ -1,19 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SomePage from "./components/SomePage";
-import AnotherPage from "./components/AnotherPage";
 import LoginPage from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
+import ForgetPasswordPage from "./components/auth/ForgetPasswordPage";
+import DashboardPage from "./components/backOffice/DashboardPage";
 import "./App.css";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SomePage />} />
-        <Route path="/another" element={<AnotherPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* Define more routes as needed */}
+        <Route path="/forgot-password" element={<ForgetPasswordPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
