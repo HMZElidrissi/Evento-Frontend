@@ -1,37 +1,40 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Label from "./common/Label";
-import Input from "./common/Input";
-import PrimaryButton from "./common/PrimaryButton";
+import { useState, useRef } from "react";
+import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useStateContext } from "../../contexts/ContextProvider";
+import axiosClient from "../../axios-client";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const { token } = useStateContext();
+  const { setUser, setToken } = useStateContext();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [errors, setErrors] = useState({});
 
-  const handleLogin =  (event) => {
+  if (token) {
+    return <Navigate to="/" />;
+  }
+
+  const handleLogin = (event) => {
     event.preventDefault();
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+    const payload = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+    axiosClient.post("/login", payload).then(({ data }) => {
+      setUser(data.user);
+      setToken(data.token);
     })
-      .then(async (response) => {
-        const data = await response.json();
-        if (response.ok) {
-          localStorage.setItem("token", data.token);
-          navigate("/dashboard");
-        } else {
-          setError(data.error);
-        }
-      })
       .catch((error) => {
-        console.error("Error:", error);
+        const { response } = error;
+        if (response && response.status === 422) {
+          if (response.data.errors) {
+            setErrors(response.data.errors);
+          } else {
+            setErrors({ email: response.data.error });
+          }
+        }
       });
-    setPassword("");
   };
 
   return (
@@ -51,29 +54,47 @@ const LoginPage = () => {
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
               <form className="space-y-6" onSubmit={handleLogin} method="POST">
-                {error && (
-                  <div className="text-center text-red-500 text-sm mb-2">{error}</div>
+
+                {errors && (
+                  <div className="text-center text-red-500 text-sm mb-2">
+                    {errors.email}
+                  </div>
                 )}
                 <div>
-                  <Label htmlFor="email">Email address</Label>
-                  <Input
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    ref={emailRef}
+                    className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-evento-700 focus:border-evento-700 sm:text-sm"
                     type="email"
                     id="email"
                     name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email address ..."
+                    placeholder="Your email ..."
                   />
                 </div>
 
+                {errors && (
+                  <div className="text-center text-red-500 text-sm mb-2">
+                    {errors.password}
+                  </div>
+                )}
                 <div>
-                  <Label htmlFor="password">Password</Label>
-                  <Input
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    ref={passwordRef}
+                    className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-evento-700 focus:border-evento-700 sm:text-sm"
                     type="password"
                     id="password"
                     name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Your password ..."
                   />
                 </div>
@@ -104,8 +125,22 @@ const LoginPage = () => {
                   </div>
                 </div>
 
+                <div className="text-center">
+                  <Link
+                    to="/register"
+                    className="text-sm font-medium text-gray-700 hover:underline"
+                  >
+                    Don&apos;t have an account? Register
+                  </Link>
+                </div>
+
                 <div>
-                  <PrimaryButton type="submit">Login</PrimaryButton>
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-evento-700 hover:bg-evento-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-evento-600"
+                  >
+                    Login
+                  </button>
                 </div>
               </form>
             </div>
