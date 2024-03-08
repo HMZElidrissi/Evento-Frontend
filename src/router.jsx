@@ -6,6 +6,8 @@ import DashboardPage from "./components/backOffice/DashboardPage";
 import EventsPage from "./components/backOffice/EventsPage";
 import ReservationsPage from "./components/backOffice/ReservationsPage";
 import UsersPage from "./components/backOffice/UsersPage";
+import CategoriesPage from "./components/backOffice/CategoriesPage";
+import MyEventsPage from "./components/backOffice/MyEventsPage";
 import BackOfficeLayout from "./layouts/BackOfficeLayout";
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
         path: "/users",
         element: <UsersPage />,
       },
+      {
+        path: "/categories",
+        element: <CategoriesPage />,
+      },
+      {
+        path: "/my-events",
+        element: <MyEventsPage />,
+      }
     ],
   },
   {

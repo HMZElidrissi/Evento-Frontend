@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -9,6 +9,7 @@ import {
   MenuAlt2Icon,
   UsersIcon,
   XIcon,
+  TagIcon,
 } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -19,25 +20,43 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: ChartBarIcon,
+    role: 1,
     current: location.pathname === "/dashboard",
+  },
+  {
+    name: "My Events",
+    href: "/my-events",
+    icon: CalendarIcon,
+    role: 2,
+    current: location.pathname === "/my-events",
   },
   {
     name: "Events",
     href: "/events",
     icon: CalendarIcon,
+    role: 1,
     current: location.pathname === "/events",
   },
   {
     name: "Reservations",
     href: "/reservations",
     icon: InboxIcon,
+    role: 2,
     current: location.pathname === "/reservations",
   },
   {
     name: "Users",
     href: "/users",
     icon: UsersIcon,
+    role: 1,
     current: location.pathname === "/users",
+  },
+  {
+    name: "Categories",
+    href: "/categories",
+    icon: TagIcon,
+    role: 1,
+    current: location.pathname === "/categories",
   },
 ];
 const userNavigation = [
@@ -49,27 +68,26 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const DashboardPage = () => {
+const BackOfficeLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, token, setUser, setToken } = useStateContext();
-  
+  const navigate = useNavigate();
 
   const handleLogout = (event) => {
     event.preventDefault();
     setUser({});
     setToken(null);
-  }
+  };
 
   useEffect(() => {
     if (!token) {
-      return <Navigate to="/login" />;
+      navigate("/login");
     }
-    // document.title = "Dashboard - Evento";
-    axiosClient.get('/me').then(({ data }) => {
+
+    axiosClient.get("/me").then(({ data }) => {
       setUser(data.user);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token, setUser, navigate]);
 
   return (
     <>
@@ -135,29 +153,31 @@ const DashboardPage = () => {
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                          "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        )}
-                      >
-                        <item.icon
+                    {navigation
+                      .filter((item) => item.role === user.role_id)
+                      .map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
                           className={classNames(
                             item.current
-                              ? "text-gray-500"
-                              : "text-gray-400 group-hover:text-gray-500",
-                            "mr-4 flex-shrink-0 h-6 w-6"
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                            "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                           )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
+                        >
+                          <item.icon
+                            className={classNames(
+                              item.current
+                                ? "text-gray-500"
+                                : "text-gray-400 group-hover:text-gray-500",
+                              "mr-4 flex-shrink-0 h-6 w-6"
+                            )}
+                            aria-hidden="true"
+                          />
+                          {item.name}
+                        </a>
+                      ))}
                   </nav>
                 </div>
               </div>
@@ -183,29 +203,31 @@ const DashboardPage = () => {
             </div>
             <div className="mt-5 flex-grow flex flex-col">
               <nav className="flex-1 px-2 pb-4 space-y-1">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                    )}
-                  >
-                    <item.icon
+                {navigation
+                  .filter((item) => item.role === user.role_id)
+                  .map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
                       className={classNames(
                         item.current
-                          ? "text-gray-500"
-                          : "text-gray-400 group-hover:text-gray-500",
-                        "mr-3 flex-shrink-0 h-6 w-6"
+                          ? "bg-gray-100 text-gray-900"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                        "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                       )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
-                ))}
+                    >
+                      <item.icon
+                        className={classNames(
+                          item.current
+                            ? "text-gray-500"
+                            : "text-gray-400 group-hover:text-gray-500",
+                          "mr-3 flex-shrink-0 h-6 w-6"
+                        )}
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </a>
+                  ))}
               </nav>
             </div>
           </div>
@@ -241,7 +263,9 @@ const DashboardPage = () => {
                 </form>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
-                <div className="ml-3 relative text-gray-500">{user.name}&nbsp; &nbsp;</div>
+                <div className="ml-3 relative text-gray-500">
+                  {user.name}&nbsp; &nbsp;
+                </div>
 
                 <button
                   type="button"
@@ -321,4 +345,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default BackOfficeLayout;
