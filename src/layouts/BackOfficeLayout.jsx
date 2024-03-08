@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -15,7 +15,7 @@ import { SearchIcon } from "@heroicons/react/solid";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../axios-client";
 
-const navigation = [
+const InitialNavigation = [
   {
     name: "Dashboard",
     href: "/dashboard",
@@ -70,8 +70,10 @@ function classNames(...classes) {
 
 const BackOfficeLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [navigation, setNavigation] = useState(InitialNavigation);
   const { user, token, setUser, setToken } = useStateContext();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = (event) => {
     event.preventDefault();
@@ -88,6 +90,14 @@ const BackOfficeLayout = () => {
       setUser(data.user);
     });
   }, [token, setUser, navigate]);
+
+  useEffect(() => {
+    const updatedNavigation = navigation.map((item) => ({
+      ...item,
+      current: location.pathname === item.href,
+    }));
+    setNavigation(updatedNavigation);
+  }, [location.pathname]);
 
   return (
     <>
@@ -156,14 +166,15 @@ const BackOfficeLayout = () => {
                     {navigation
                       .filter((item) => item.role === user.role_id)
                       .map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          to={item.href}
                           className={classNames(
-                            item.current
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                            "group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                            "group flex items-center px-2 py-2 text-base font-medium rounded-md",
+                            {
+                              "text-gray-600 hover:bg-gray-50 hover:text-gray-900":
+                                !item.current,
+                            }
                           )}
                         >
                           <item.icon
@@ -176,7 +187,7 @@ const BackOfficeLayout = () => {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                   </nav>
                 </div>
@@ -206,9 +217,9 @@ const BackOfficeLayout = () => {
                 {navigation
                   .filter((item) => item.role === user.role_id)
                   .map((item) => (
-                    <a
+                    <Link
                       key={item.name}
-                      href={item.href}
+                      to={item.href}
                       className={classNames(
                         item.current
                           ? "bg-gray-100 text-gray-900"
@@ -226,7 +237,7 @@ const BackOfficeLayout = () => {
                         aria-hidden="true"
                       />
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
               </nav>
             </div>
@@ -300,7 +311,7 @@ const BackOfficeLayout = () => {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
+                            <Link
                               href={item.href}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
@@ -308,7 +319,7 @@ const BackOfficeLayout = () => {
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
