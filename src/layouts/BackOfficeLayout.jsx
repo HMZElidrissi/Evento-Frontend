@@ -2,14 +2,14 @@ import {Fragment, useEffect, useState} from "react";
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {Dialog, Menu, Transition} from "@headlessui/react";
 import {
-  BellIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  InboxIcon,
-  MenuAlt2Icon,
-  TagIcon,
-  UsersIcon,
-  XIcon,
+    BellIcon,
+    CalendarIcon,
+    ChartBarIcon,
+    InboxIcon,
+    MenuAlt2Icon,
+    TagIcon,
+    UsersIcon,
+    XIcon,
 } from "@heroicons/react/outline";
 import {SearchIcon} from "@heroicons/react/solid";
 import {useStateContext} from "../contexts/ContextProvider";
@@ -321,7 +321,7 @@ const BackOfficeLayout = () => {
                                                 <Menu.Item key={item.name}>
                                                     {({active}) => (
                                                         <Link
-                                                            href={item.href}
+                                                            to={item.href}
                                                             className={classNames(
                                                                 active ? "bg-gray-100" : "",
                                                                 "block px-4 py-2 text-sm text-gray-700"
