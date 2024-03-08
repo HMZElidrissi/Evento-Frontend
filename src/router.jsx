@@ -16,6 +16,8 @@ import NotFoundPage from "./components/errors/404.jsx";
 import InternalServerErrorPage from "./components/errors/500.jsx";
 import FrontOfficeLayout from "./layouts/FrontOfficeLayout.jsx";
 import MyReservationsPage from "./components/frontOffice/MyReservationsPage.jsx";
+import ForgetPasswordPage from "./components/auth/ForgetPasswordPage.jsx";
+import ResetPasswordPage from "./components/auth/ResetPasswordPage.jsx";
 
 
 const router = createBrowserRouter([
@@ -87,6 +89,14 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: <RegisterPage/>,
+    },
+    {
+        path: "/forgot-password",
+        element: <ForgetPasswordPage/>,
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPasswordPage/>,
     },
     {
         path: "/500",
