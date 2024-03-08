@@ -1,9 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import LoginPage from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
-/*
 import HomePage from "./components/frontOffice/HomePage";
-*/
 import DashboardPage from "./components/backOffice/DashboardPage";
 import EventsPage from "./components/backOffice/EventsPage";
 import ReservationsPage from "./components/backOffice/ReservationsPage";
@@ -17,12 +15,24 @@ import ForbiddenPage from "./components/errors/403.jsx";
 import NotFoundPage from "./components/errors/404.jsx";
 import InternalServerErrorPage from "./components/errors/500.jsx";
 import FrontOfficeLayout from "./layouts/FrontOfficeLayout.jsx";
+import MyReservationsPage from "./components/frontOffice/MyReservationsPage.jsx";
+
 
 const router = createBrowserRouter([
 
     {
         path: "/",
         element: <FrontOfficeLayout/>,
+        children: [
+            {
+                path: "/",
+                element: <HomePage/>,
+            },
+            {
+                path: "/my-reservations",
+                element: <MyReservationsPage/>,
+            }
+        ]
     },
     {
         path: "/",
