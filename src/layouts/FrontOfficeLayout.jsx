@@ -1,6 +1,6 @@
 import {Fragment, useEffect, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
-import {BookmarkAltIcon, MenuIcon, XIcon} from '@heroicons/react/outline'
+import {BookmarkAltIcon, ChartBarIcon, MenuIcon, XIcon} from '@heroicons/react/outline'
 import {Link, Outlet} from "react-router-dom";
 import axiosClient from "../axios-client";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
@@ -170,7 +170,7 @@ const FrontOfficeLayout = () => {
                                                     </div>
                                                 </>
                                             )}
-                                            {token && user && (
+                                            {token && (user && user.role_id === 3) && (
                                                 <>
                                                     <div className="flow-root text-gray-600 font-medium">
                                                         Welcome, {user.name}
@@ -191,6 +191,31 @@ const FrontOfficeLayout = () => {
                                                                 aria-hidden="true"/>
                                                             <span
                                                                 className="ml-2 text-sm font-medium text-gray-900">Approved Reservations</span>
+                                                        </Link>
+                                                    </div>
+                                                </>
+                                            )}
+                                            {token && (user && user.role_id !== 3) && (
+                                                <>
+                                                    <div className="flow-root text-gray-600 font-medium">
+                                                        Welcome, {user.name}
+                                                    </div>
+                                                    &nbsp; &nbsp; &nbsp; &nbsp;
+                                                    <div className="flow-root">
+                                                        <a href="#"
+                                                           onClick={handleLogout}
+                                                           className="-m-2 p-2 block text-gray-600">
+                                                            Sign out
+                                                        </a>
+                                                    </div>
+                                                    <div className="ml-4 flow-root lg:ml-8">
+                                                        <Link to="/dashboard"
+                                                              className="group -m-2 p-2 flex items-center">
+                                                            <ChartBarIcon
+                                                                className="flex-shrink-0 h-6 w-6 text-gray-400"
+                                                                aria-hidden="true"/>
+                                                            <span
+                                                                className="ml-2 text-sm font-medium text-gray-900">Dashboard</span>
                                                         </Link>
                                                     </div>
                                                 </>
