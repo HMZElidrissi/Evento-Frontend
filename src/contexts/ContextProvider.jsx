@@ -8,9 +8,7 @@ const StateContext = createContext({
 });
 
 const ContextProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    name: "John Doe",
-  });
+  const [user, setUser] = useState({});
   const [token, _setToken] = useState(localStorage.getItem("JWT_TOKEN"));
 
   const setToken = (token) => {

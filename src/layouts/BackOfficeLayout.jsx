@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "../axios-client";
 
 const navigation = [
   {
@@ -52,15 +53,23 @@ const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, token, setUser, setToken } = useStateContext();
   
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
 
   const handleLogout = (event) => {
     event.preventDefault();
     setUser({});
     setToken(null);
   }
+
+  useEffect(() => {
+    if (!token) {
+      return <Navigate to="/login" />;
+    }
+    // document.title = "Dashboard - Evento";
+    axiosClient.get('/me').then(({ data }) => {
+      setUser(data.user);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
