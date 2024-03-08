@@ -97,6 +97,7 @@ const BackOfficeLayout = () => {
       current: location.pathname === item.href,
     }));
     setNavigation(updatedNavigation);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   return (
