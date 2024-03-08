@@ -9,6 +9,7 @@ import UsersPage from "./components/backOffice/UsersPage";
 import CategoriesPage from "./components/backOffice/CategoriesPage";
 import MyEventsPage from "./components/backOffice/MyEventsPage";
 import BackOfficeLayout from "./layouts/BackOfficeLayout";
+import CategoryForm from "./components/backOffice/CategoryForm";
 
 const router = createBrowserRouter([
   {
@@ -40,9 +41,17 @@ const router = createBrowserRouter([
         element: <CategoriesPage />,
       },
       {
+        path: "/categories/create",
+        element: <CategoryForm key="userCreate" />,
+      },
+      {
+        path: "/categories/:id",
+        element: <CategoryForm key="userUpdate" />,
+      },
+      {
         path: "/my-events",
         element: <MyEventsPage />,
-      }
+      },
     ],
   },
   {
