@@ -15,6 +15,12 @@ const UsersPage = () => {
     });
   };
 
+  const restoreAccess = (userId) => {
+    axiosClient.put(`/users/${userId}/restore-access`).then(() => {
+      getUsers();
+    });
+  };
+
   const getUsers = () => {
     setLoading(true);
     axiosClient
@@ -97,12 +103,21 @@ const UsersPage = () => {
                         {person.is_active ? "Active" : "Inactive"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => revokeAccess(person.id)}
-                          className="text-evento-600 hover:text-evento-900"
-                        >
-                          Revoke Access
-                        </button>
+                        {person.is_active ? (
+                          <button
+                            onClick={() => revokeAccess(person.id)}
+                            className="text-evento-600 hover:text-evento-900"
+                          >
+                            Revoke Access
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => restoreAccess(person.id)}
+                            className="text-evento-600 hover:text-evento-900"
+                          >
+                            Restore Access
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
