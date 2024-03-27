@@ -1,8 +1,42 @@
-# React + Vite
+# Evento Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the Evento app. An event management system that manages events, users, and bookings.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Laravel 10 (RESTful API)
+- React + Vite
+- Tailwind CSS
+- PostgreSQL
+- JWT Authentication [Firebase JWT](https://github.com/firebase/php-jwt)
+
+## Getting Started
+
+- Clone the repository
+
+```bash
+git clone https://github.com/HMZElidrissi/Evento-Frontend.git
+```
+
+- Install dependencies
+
+```bash
+cd Evento-Frontend
+npm install
+```
+
+- Create a `.env` file and copy the contents of `.env.example` to it
+
+```bash
+cp .env.example .env
+```
+
+- Start the development server
+
+```bash
+npm run dev
+```
+
+## Backend
+
+> The Backend is available at [Evento API](https://github.com/HMZElidrissi/Evento-API)
